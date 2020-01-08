@@ -17,7 +17,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await FlutterXyPlugin.platformVersion, '42');
+  test('isLandingPageDisplayActionBarEnabled', () async {
+    expect(await FlutterXyPlugin.landingPageDisplayActionBarEnabled, false);
   });
 }

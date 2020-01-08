@@ -16,6 +16,7 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://nexus.mobrtb.com/repository/sdk' }
     }
 }
 
@@ -32,3 +33,9 @@ android {
         disable 'InvalidPackage'
     }
 }
+
+
+dependencies {
+    implementation 'io.flutter.plugin.xy:adtalos-sdk:2.2.0'
+}
+
