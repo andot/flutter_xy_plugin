@@ -9,15 +9,15 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 新义互联广告 SDK Flutter 插件.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/adtalos/flutter_xy_plugin'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Ma Bingyao' => 'mabingyao@adtalos.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
+  s.dependency 'AdtalosSDK', '~> 1.2.4'
   s.platform = :ios, '8.0'
 
-  # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
+  s.static_framework = true
 end
