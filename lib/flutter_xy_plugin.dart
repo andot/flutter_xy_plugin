@@ -42,4 +42,26 @@ class FlutterXyPlugin {
     _channel.invokeMethod('setLandingPageFullScreenEnabled',
         <String, dynamic>{"enabled": enabled});
   }
+
+  static void showBannerAbsolute(String unitId,
+      {int width = 0, int height = 0, int x = 0, int y = 0}) {
+    _channel.invokeMethod("showBannerAbsolute", <String, dynamic>{
+      "id": unitId,
+      "width": width,
+      "height": height,
+      "x": x,
+      "y": y
+    });
+  }
+
+  static void showNativeAbsolute(String unitId,
+      {int width = 0, int height = 0, int x = 0, int y = 0}) {
+    _channel.invokeMethod("showBannerAbsolute", <String, dynamic>{
+      "id": unitId,
+      "width": width,
+      "height": height,
+      "x": x,
+      "y": y
+    });
+  }
 }

@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _value = 'Unknown';
+//  String _value = 'Unknown';
 
   @override
   void initState() {
@@ -22,22 +22,22 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String value;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      value = (await FlutterXyPlugin.landingPageDisplayActionBarEnabled).toString();
-    } on PlatformException {
-      value = 'ooxx.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _value = value;
-    });
+//    String value;
+//    // Platform messages may fail, so we use a try/catch PlatformException.
+//    try {
+//      value = (await FlutterXyPlugin.landingPageDisplayActionBarEnabled).toString();
+//    } on PlatformException {
+//      value = 'ooxx.';
+//    }
+//
+//    // If the widget was removed from the tree while the asynchronous platform
+//    // message was in flight, we want to discard the reply rather than calling
+//    // setState to update our non-existent appearance.
+//    if (!mounted) return;
+//
+//    setState(() {
+//      _value = value;
+//    });
   }
 
   @override
@@ -45,10 +45,27 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('新义互联广告 SDK Flutter 插件演示'),
         ),
-        body: Center(
-          child: Text('Running on: $_value\n'),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                RaisedButton(
+                    child: const Text('Show Banner on Absolute Position'),
+                    onPressed: () {
+                      FlutterXyPlugin.showBannerAbsolute('209A03F87BA3B4EB82BEC9E5F8B41383');
+                    }),
+              ].map((Widget button) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: button,
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );
