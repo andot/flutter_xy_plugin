@@ -58,6 +58,11 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       FlutterXyPlugin.showBannerAbsolute('209A03F87BA3B4EB82BEC9E5F8B41383');
                     }),
+                RaisedButton(
+                    child: const Text('Show Banner on Relative Position'),
+                    onPressed: () {
+                      FlutterXyPlugin.showBannerRelative('12BCB120713A5791D07972A0E377C1FE', position:Position.BottomCenter);
+                    }),
               ].map((Widget button) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),

@@ -2,6 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+enum Position {
+  Absolute,
+  TopLeft,
+  TopCenter,
+  TopRight,
+  MiddleLeft,
+  MiddleCenter,
+  MiddleRight,
+  BottomLeft,
+  BottomCenter,
+  BottomRight
+}
+
 class FlutterXyPlugin {
   static const MethodChannel _channel =
       const MethodChannel('flutter_xy_plugin');
@@ -61,6 +74,28 @@ class FlutterXyPlugin {
       "width": width,
       "height": height,
       "x": x,
+      "y": y
+    });
+  }
+
+  static void showBannerRelative(String unitId,
+      {int width = 0, int height = 0, Position position = Position.Absolute, int y = 0}) {
+    _channel.invokeMethod("showBannerRelative", <String, dynamic>{
+      "id": unitId,
+      "width": width,
+      "height": height,
+      "position": position.index,
+      "y": y
+    });
+  }
+
+  static void showNativeRelative(String unitId,
+      {int width = 0, int height = 0, Position position = Position.Absolute, int y = 0}) {
+    _channel.invokeMethod("showNativeRelative", <String, dynamic>{
+      "id": unitId,
+      "width": width,
+      "height": height,
+      "position": position.index,
       "y": y
     });
   }

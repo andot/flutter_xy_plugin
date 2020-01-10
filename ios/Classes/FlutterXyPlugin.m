@@ -133,6 +133,19 @@
 
 @end
 
+typedef NS_ENUM(int, AdtalosAdPosition) {
+    AdtalosAdPositionAbsolute         = 0,
+    AdtalosAdPositionTopLeft          = 1,
+    AdtalosAdPositionTopCenter        = 2,
+    AdtalosAdPositionTopRight         = 3,
+    AdtalosAdPositionMiddleLeft       = 4,
+    AdtalosAdPositionMiddleCenter     = 5,
+    AdtalosAdPositionMiddleRight      = 6,
+    AdtalosAdPositionBottomLeft       = 7,
+    AdtalosAdPositionBottomCenter     = 8,
+    AdtalosAdPositionBottomRight      = 9
+};
+
 static NSMutableDictionary *adViews;
 static NSMutableDictionary *listeners;
 static NSMutableDictionary *ads;
@@ -188,6 +201,78 @@ static FlutterMethodChannel* channel;
     [FlutterXyPlugin.rootViewController.view addSubview:adView];
 }
 
+-(void)showAdRelative:(NSString *)unitId width:(int)width height:(int) height position:(int)position y:(int)y aspectRatio:(double)aspectRatio {
+    if (width <= 0 || height <= 0) {
+        width = (int)[UIScreen mainScreen].bounds.size.width;
+        height = (int)(width * aspectRatio);
+    }
+    CGFloat left_x = 0;
+    CGFloat top_y = 0;
+    CGFloat right_x = [UIScreen mainScreen].bounds.size.width - width;
+    CGFloat bottom_y = [UIScreen mainScreen].bounds.size.height - height;
+    CGFloat center_x = right_x / 2;
+    CGFloat middle_y = bottom_y / 2;
+    CGPoint point;
+    UIViewAutoresizing autoresizingMask;
+    switch((AdtalosAdPosition)position) {
+        case AdtalosAdPositionAbsolute:
+        case AdtalosAdPositionTopLeft:
+            point.x = left_x;
+            point.y = top_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionTopCenter:
+            point.x = center_x;
+            point.y = top_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionTopRight:
+            point.x = right_x;
+            point.y = top_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionMiddleLeft:
+            point.x = left_x;
+            point.y = middle_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionMiddleCenter:
+            point.x = center_x;
+            point.y = middle_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionMiddleRight:
+            point.x = right_x;
+            point.y = middle_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            break;
+        case AdtalosAdPositionBottomLeft:
+            point.x = left_x;
+            point.y = bottom_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+            break;
+        case AdtalosAdPositionBottomCenter:
+            point.x = center_x;
+            point.y = bottom_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+            break;
+        case AdtalosAdPositionBottomRight:
+            point.x = right_x;
+            point.y = bottom_y + y;
+            autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+            break;
+    }
+    AdtalosAdView *adView = [[AdtalosAdView alloc] initWithFrame:CGRectMake(point.x, point.y, width, height)];
+    adView.autoresizingMask = autoresizingMask;
+    adViews[unitId] = adView;
+    FlutterXyPluginListener *listener = [[FlutterXyPluginListener alloc] init:channel withAdUnitId:unitId];
+    listeners[unitId] = listener;
+    adView.delegate = listener;
+    adView.videoController.delegate = listener;
+    [adView loadAd:unitId];
+    [FlutterXyPlugin.rootViewController.view addSubview:adView];
+}
+
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([call.method isEqualToString:@"setOAID"]) {
         result(nil);
@@ -229,6 +314,18 @@ static FlutterMethodChannel* channel;
         int y = ((NSNumber *)call.arguments[@"y"]).intValue;
         double aspectRatio = [call.method isEqualToString:@"showBannerAbsolute"] ? 5.0 / 32.0 : 5.0 / 7.0;
         [self showAdAbsolute:unitId width:width height:height x:x y:y aspectRatio:aspectRatio];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"showBannerRelative"] ||
+        [call.method isEqualToString:@"showNativeRelative"]) {
+        NSString *unitId = call.arguments[@"id"];
+        int width = ((NSNumber *)call.arguments[@"width"]).intValue;
+        int height = ((NSNumber *)call.arguments[@"height"]).intValue;
+        int position = ((NSNumber *)call.arguments[@"position"]).intValue;
+        int y = ((NSNumber *)call.arguments[@"y"]).intValue;
+        double aspectRatio = [call.method isEqualToString:@"showBannerRelative"] ? 5.0 / 32.0 : 5.0 / 7.0;
+        [self showAdRelative:unitId width:width height:height position:position y:y aspectRatio:aspectRatio];
         result(nil);
         return;
     }
