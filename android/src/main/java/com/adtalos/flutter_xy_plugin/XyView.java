@@ -75,8 +75,6 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
             view.autoRetry((int)params.get("retry"));
         }
         if (params.containsKey("id")) {
-            System.out.println(params.get("id"));
-            System.out.println(view.getSize().getAspectRatio());
             view.load((String)params.get("id"), true);
         }
     }
@@ -88,12 +86,6 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
 
     @Override
     public View getView() {
-        System.out.println(view);
-        Rect rect = new Rect();
-        System.out.println("getGlobalVisibleRect: " + view.getGlobalVisibleRect(rect));
-        System.out.println("getLocalVisibleRect: " + view.getLocalVisibleRect(rect));
-        System.out.println("isShown: " + view.isShown());
-        System.out.println("hasWindowFocus: " + view.hasWindowFocus());
         return view;
     }
 

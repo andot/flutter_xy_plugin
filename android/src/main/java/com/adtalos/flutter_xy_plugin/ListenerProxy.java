@@ -16,10 +16,10 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     }
 
     @Override
-    public void on(String name, final String data) {
-        System.out.println("onCustom: " + name);
+    public void on(final String name, final String data) {
         if (channel != null) {
-            channel.invokeMethod(name, new HashMap<String, Object>() {{
+            channel.invokeMethod("onCustom", new HashMap<String, Object>() {{
+                put("name", name);
                 put("data", data);
             }});
         }
@@ -27,7 +27,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onRendered() {
-        System.out.println("onRendered");
         if (channel != null) {
             channel.invokeMethod("onRendered", null);
         }
@@ -35,7 +34,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onImpressionFinished() {
-        System.out.println("onImpressionFinished");
         if (channel != null) {
             channel.invokeMethod("onImpressionFinished",
                     null);
@@ -44,7 +42,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onImpressionFailed() {
-        System.out.println("onImpressionFailed");
         if (channel != null) {
             channel.invokeMethod("onImpressionFailed",
                     null);
@@ -53,7 +50,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onImpressionReceivedError(final int errorCode, final String description) {
-        System.out.println("onImpressionReceivedError");
         if (channel != null) {
             channel.invokeMethod("onImpressionReceivedError",
                     new HashMap<String, Object>() {{
@@ -64,7 +60,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onLoaded() {
-        System.out.println("onLoaded");
         if (channel != null) {
             channel.invokeMethod("onLoaded",
                     null);
@@ -73,7 +68,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onFailedToLoad(final Exception e) {
-        System.out.println("onFailedToLoad");
         if (channel != null) {
             channel.invokeMethod("onFailedToLoad",
                     new HashMap<String, Object>() {{
@@ -84,7 +78,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onOpened() {
-        System.out.println("onOpened");
         if (channel != null) {
             channel.invokeMethod("onOpened",
                     null);
@@ -93,7 +86,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onClicked() {
-        System.out.println("onClicked");
         if (channel != null) {
             channel.invokeMethod("onClicked",
                     null);
@@ -102,7 +94,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onLeftApplication() {
-        System.out.println("onLeftApplication");
         if (channel != null) {
             channel.invokeMethod("onLeftApplication",
                     null);
@@ -111,7 +102,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onClosed() {
-        System.out.println("onClosed");
         if (channel != null) {
             channel.invokeMethod("onClosed",
                     null);
