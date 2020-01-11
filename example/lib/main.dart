@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_xy_plugin/flutter_xy_plugin.dart';
 
 void main() => runApp(MyApp());
@@ -42,8 +41,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    XyView xyview1 = XyView();
-    XyView xyview2 = XyView();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -64,20 +61,39 @@ class _MyAppState extends State<MyApp> {
                 Container(
                     height: 40,
                     child: XyView(
-                        id: "209A03F87BA3B4EB82BEC9E5F8B41383"
+//                      id : "209A03F87BA3B4EB82BEC9E5F8B41383",
+                      onCreated: (view) {
+                        view.load("209A03F87BA3B4EB82BEC9E5F8B41383");
+                      },
+                      onLoaded: (view) {
+                        view.show();
+                      },
+                      onImpressionFinished: (view) {
+                        print(
+                            "onImpressionFinished: 209A03F87BA3B4EB82BEC9E5F8B41383");
+                      },
                     )),
                 Container(
                     height: 40,
                     child: XyView(
-                        id: "96753DCF925E8DC7C105B3D3ED1138EA"
+                      id : "96753DCF925E8DC7C105B3D3ED1138EA",
+//                      onCreated: (view) {
+//                        view.load("96753DCF925E8DC7C105B3D3ED1138EA");
+//                      },
+//                      onLoaded: (view) {
+//                        view.show();
+//                      },
+                      onImpressionFinished: (view) {
+                        print(
+                            "onImpressionFinished: 96753DCF925E8DC7C105B3D3ED1138EA");
+                      },
                     )),
                 RaisedButton(
                     child: const Text('Show Banner on Relative Position'),
                     onPressed: () {
                       FlutterXyPlugin.showBannerRelative(
                           '96753DCF925E8DC7C105B3D3ED1138EA',
-                          position: Position.BottomCenter
-                      );
+                          position: Position.BottomCenter);
                     }),
               ].map((Widget button) {
                 return Padding(
