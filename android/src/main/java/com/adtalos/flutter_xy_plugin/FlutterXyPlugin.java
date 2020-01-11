@@ -3,8 +3,6 @@ package com.adtalos.flutter_xy_plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -15,13 +13,14 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.platform.PlatformViewRegistry;
 import io.flutter.plugin.xy.LandingPageActivity;
 import io.flutter.plugin.xy.SDK;
 
 /**
  * FlutterXyPlugin
  */
-public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCallHandler {
+public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
     private final static FlutterXyPlugin plugin = new FlutterXyPlugin();
     private BannerViewHandler bannerViewHandler;
     private Context applicationContext;
@@ -29,6 +28,7 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCal
     private Activity activity;
     // This is always null when not using v2 embedding.
     private FlutterPluginBinding pluginBinding;
+
     /**
      * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
      *
@@ -36,8 +36,8 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCal
      * initialized this way won't react to changes in activity or context.
      *
      * @param registrar connects this plugin's {@link
-     *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
-     *     io.flutter.plugin.common.BinaryMessenger}.
+     *                  io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
+     *                  io.flutter.plugin.common.BinaryMessenger}.
      */
     public static void registerWith(Registrar registrar) {
         if (registrar.activity() == null) {
@@ -45,16 +45,18 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCal
             // We stop the registering process immediately because the flutter_xy_plugin requires an activity.
             return;
         }
-        plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
+        plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger(), registrar.platformViewRegistry());
     }
 
     private void initializePlugin(
-            Context applicationContext, Activity activity, BinaryMessenger messenger) {
+            Context applicationContext, Activity activity, BinaryMessenger messenger, PlatformViewRegistry registry) {
         this.activity = activity;
         this.applicationContext = applicationContext;
         this.channel = new MethodChannel(messenger, "flutter_xy_plugin");
         channel.setMethodCallHandler(this);
         this.bannerViewHandler = new BannerViewHandler(applicationContext, activity, channel);
+        registry.registerViewFactory("flutter_xy_plugin/XyView", new XyViewFactory(messenger));
+        registry.registerViewFactory("flutter_xy_plugin/XyNativeView", new XyNativeViewFactory(messenger));
 
         SDK.requestPermissions(activity);
     }
@@ -74,7 +76,8 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCal
         initializePlugin(
                 pluginBinding.getApplicationContext(),
                 binding.getActivity(),
-                pluginBinding.getBinaryMessenger());
+                pluginBinding.getBinaryMessenger(),
+                pluginBinding.getPlatformViewRegistry());
     }
 
     @Override
@@ -87,7 +90,8 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware,  MethodCal
         initializePlugin(
                 pluginBinding.getApplicationContext(),
                 binding.getActivity(),
-                pluginBinding.getBinaryMessenger());
+                pluginBinding.getBinaryMessenger(),
+                pluginBinding.getPlatformViewRegistry());
     }
 
     @Override

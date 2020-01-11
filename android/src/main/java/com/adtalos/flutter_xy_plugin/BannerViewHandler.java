@@ -17,11 +17,14 @@ class BannerViewHandler extends ViewHandler {
     }
 
     @Override
-    public void prepare(String unitId, int width, int height) {
-        if (views.containsKey(unitId)) return;
+    public void prepare(final String unitId, int width, int height) {
+        if (views.containsKey(unitId)) {
+            views.get(unitId).setVisibility(android.view.View.VISIBLE);
+            return;
+        }
         Size size = new Size(width, height);
-        View view = new View(getActivity());
-        ListenerProxy listenerProxy = new ListenerProxy(unitId, getChannel());
+        final View view = new View(getActivity());
+        ListenerProxy listenerProxy = new ListenerProxy(getChannel());
         view.setSize(size);
         view.setAnimationEnabled(true);
         view.setCarouselModeEnabled(true);

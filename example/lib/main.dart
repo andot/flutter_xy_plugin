@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_xy_plugin/flutter_xy_plugin.dart';
 
@@ -42,6 +42,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    XyView xyview1 = XyView();
+    XyView xyview2 = XyView();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -56,12 +58,26 @@ class _MyAppState extends State<MyApp> {
                 RaisedButton(
                     child: const Text('Show Banner on Absolute Position'),
                     onPressed: () {
-                      FlutterXyPlugin.showBannerAbsolute('209A03F87BA3B4EB82BEC9E5F8B41383');
+                      FlutterXyPlugin.showBannerAbsolute(
+                          '209A03F87BA3B4EB82BEC9E5F8B41383');
                     }),
+                Container(
+                    height: 40,
+                    child: XyView(
+                        id: "209A03F87BA3B4EB82BEC9E5F8B41383"
+                    )),
+                Container(
+                    height: 40,
+                    child: XyView(
+                        id: "96753DCF925E8DC7C105B3D3ED1138EA"
+                    )),
                 RaisedButton(
                     child: const Text('Show Banner on Relative Position'),
                     onPressed: () {
-                      FlutterXyPlugin.showBannerRelative('12BCB120713A5791D07972A0E377C1FE', position:Position.BottomCenter);
+                      FlutterXyPlugin.showBannerRelative(
+                          '96753DCF925E8DC7C105B3D3ED1138EA',
+                          position: Position.BottomCenter
+                      );
                     }),
               ].map((Widget button) {
                 return Padding(

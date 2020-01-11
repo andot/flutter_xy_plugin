@@ -9,19 +9,17 @@ import io.flutter.plugin.xy.VideoController;
 import io.flutter.plugin.xy.VideoListener;
 
 class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
-    private String unitId;
     private MethodChannel channel;
 
-    ListenerProxy(String unitId, MethodChannel channel) {
-        this.unitId = unitId;
+    ListenerProxy(MethodChannel channel) {
         this.channel = channel;
     }
 
     @Override
     public void on(String name, final String data) {
+        System.out.println("onCustom: " + name);
         if (channel != null) {
             channel.invokeMethod(name, new HashMap<String, Object>() {{
-                put("id", unitId);
                 put("data", data);
             }});
         }
@@ -29,40 +27,36 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onRendered() {
+        System.out.println("onRendered");
         if (channel != null) {
-            channel.invokeMethod("onRendered",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+            channel.invokeMethod("onRendered", null);
         }
     }
 
     @Override
     public void onImpressionFinished() {
+        System.out.println("onImpressionFinished");
         if (channel != null) {
             channel.invokeMethod("onImpressionFinished",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onImpressionFailed() {
+        System.out.println("onImpressionFailed");
         if (channel != null) {
             channel.invokeMethod("onImpressionFailed",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onImpressionReceivedError(final int errorCode, final String description) {
+        System.out.println("onImpressionReceivedError");
         if (channel != null) {
             channel.invokeMethod("onImpressionReceivedError",
                     new HashMap<String, Object>() {{
-                        put("id", unitId);
                         put("error", errorCode + ":" + description);
                     }});
         }
@@ -70,20 +64,19 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onLoaded() {
+        System.out.println("onLoaded");
         if (channel != null) {
             channel.invokeMethod("onLoaded",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onFailedToLoad(final Exception e) {
+        System.out.println("onFailedToLoad");
         if (channel != null) {
             channel.invokeMethod("onFailedToLoad",
                     new HashMap<String, Object>() {{
-                        put("id", unitId);
                         put("error", e.getMessage());
                     }});
         }
@@ -91,41 +84,37 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
 
     @Override
     public void onOpened() {
+        System.out.println("onOpened");
         if (channel != null) {
             channel.invokeMethod("onOpened",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onClicked() {
+        System.out.println("onClicked");
         if (channel != null) {
             channel.invokeMethod("onClicked",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onLeftApplication() {
+        System.out.println("onLeftApplication");
         if (channel != null) {
             channel.invokeMethod("onLeftApplication",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
     @Override
     public void onClosed() {
+        System.out.println("onClosed");
         if (channel != null) {
             channel.invokeMethod("onClosed",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -134,19 +123,16 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onVideoLoad",
                     new HashMap<String, Object>() {{
-                        put("id", unitId);
-                        put("metadata", new HashMap<String, Object>() {{
-                            put("currentTime", metadata.getCurrentTime());
-                            put("duration", metadata.getDuration());
-                            put("videoWidth", metadata.getVideoWidth());
-                            put("videoHeight", metadata.getVideoHeight());
-                            put("autoplay", metadata.isAutoplay());
-                            put("muted", metadata.isMuted());
-                            put("volume", metadata.getVolume());
-                            put("type", metadata.getType());
-                            put("status", metadata.getStatus());
-                            put("ended", false);
-                        }});
+                        put("currentTime", metadata.getCurrentTime());
+                        put("duration", metadata.getDuration());
+                        put("videoWidth", metadata.getVideoWidth());
+                        put("videoHeight", metadata.getVideoHeight());
+                        put("autoplay", metadata.isAutoplay());
+                        put("muted", metadata.isMuted());
+                        put("volume", metadata.getVolume());
+                        put("type", metadata.getType());
+                        put("status", metadata.getStatus());
+                        put("ended", false);
                     }});
         }
     }
@@ -155,9 +141,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoStart() {
         if (channel != null) {
             channel.invokeMethod("onVideoStart",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -165,9 +149,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoPlay() {
         if (channel != null) {
             channel.invokeMethod("onVideoPlay",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -175,9 +157,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoPause() {
         if (channel != null) {
             channel.invokeMethod("onVideoPause",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -185,9 +165,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoEnd() {
         if (channel != null) {
             channel.invokeMethod("onVideoEnd",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -196,7 +174,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onVideoVolumeChange",
                     new HashMap<String, Object>() {{
-                        put("id", unitId);
                         put("volume", volume);
                         put("muted", muted);
                     }});
@@ -208,7 +185,6 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onVideoTimeUpdate",
                     new HashMap<String, Object>() {{
-                        put("id", unitId);
                         put("currentTime", currentTime);
                         put("duration", duration);
                     }});
@@ -219,9 +195,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoError() {
         if (channel != null) {
             channel.invokeMethod("onVideoError",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
@@ -229,9 +203,7 @@ class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoBreak() {
         if (channel != null) {
             channel.invokeMethod("onVideoBreak",
-                    new HashMap<String, Object>() {{
-                        put("id", unitId);
-                    }});
+                    null);
         }
     }
 
