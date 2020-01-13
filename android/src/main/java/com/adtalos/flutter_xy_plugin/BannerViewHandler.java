@@ -2,7 +2,6 @@ package com.adtalos.flutter_xy_plugin;
 
 import android.app.Activity;
 import android.content.Context;
-import android.widget.RelativeLayout;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.xy.Size;
@@ -24,12 +23,12 @@ class BannerViewHandler extends ViewHandler {
         }
         Size size = new Size(width, height);
         final View view = new View(getActivity());
-        ListenerProxy listenerProxy = new ListenerProxy(getChannel());
+        XyListener xyListener = new XyListener(getChannel());
         view.setSize(size);
         view.setAnimationEnabled(true);
         view.setCarouselModeEnabled(true);
-        view.setListener(listenerProxy);
-        view.setDefaultCustomListener(listenerProxy);
+        view.setListener(xyListener);
+        view.setDefaultCustomListener(xyListener);
         views.put(unitId, view);
     }
 }

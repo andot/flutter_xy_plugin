@@ -1,11 +1,10 @@
 package com.adtalos.flutter_xy_plugin;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
@@ -13,15 +12,17 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugin.xy.Size;
+import io.flutter.plugin.xy.VideoController;
 
 public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
     private final io.flutter.plugin.xy.View view;
-    protected MethodChannel channel;
+    private final MethodChannel channel;
 
     public XyView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
         view = new io.flutter.plugin.xy.View(context);
-        initChannel(messenger, id);
-        ListenerProxy listener = new ListenerProxy(channel);
+        channel = new MethodChannel(messenger, "flutter_xy_plugin/XyView_" + id);
+        channel.setMethodCallHandler(this);
+        XyListener listener = new XyListener(channel);
         view.setListener(listener);
         view.setDefaultCustomListener(listener);
         view.getVideoController().setVideoListener(listener);
@@ -33,7 +34,7 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
             }
         });
         if (params.containsKey("size")) {
-            switch ((String)params.get("size")) {
+            switch ((String) params.get("size")) {
                 case "BANNER":
                     view.setSize(Size.BANNER);
                     break;
@@ -61,28 +62,24 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
             }
         }
         if (params.containsKey("width") && params.containsKey("height")) {
-            int width = (int)params.get("width");
-            int height = (int)params.get("height");
+            int width = (int) params.get("width");
+            int height = (int) params.get("height");
             view.setSize(new Size(width, height));
         }
         if (params.containsKey("animation")) {
-            view.setAnimationEnabled((boolean)params.get("animation"));
+            view.setAnimationEnabled((boolean) params.get("animation"));
         }
         if (params.containsKey("carousel")) {
-            view.setCarouselModeEnabled((boolean)params.get("carousel"));
+            view.setCarouselModeEnabled((boolean) params.get("carousel"));
         }
         if (params.containsKey("retry")) {
-            view.autoRetry((int)params.get("retry"));
+            view.autoRetry((int) params.get("retry"));
         }
         if (params.containsKey("id")) {
-            view.load((String)params.get("id"), true);
+            view.load((String) params.get("id"), true);
         }
     }
 
-    protected void initChannel(BinaryMessenger messenger, int id) {
-        channel = new MethodChannel(messenger, "flutter_xy_plugin/XyView_" + id);
-        channel.setMethodCallHandler(this);
-    }
 
     @Override
     public View getView() {
@@ -91,13 +88,11 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
 
     @Override
     public void onFlutterViewAttached(@NonNull View flutterView) {
-        System.out.println("onFlutterViewAttached");
         view.resume();
     }
 
     @Override
     public void onFlutterViewDetached() {
-        System.out.println("onFlutterViewDetached");
         view.pause();
     }
 
@@ -109,6 +104,7 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+        final VideoController videoController = view.getVideoController();
         switch (call.method) {
             case "impressionReport":
                 view.impressionReport();
@@ -128,6 +124,43 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
                 break;
             case "render":
                 view.render();
+                result.success(null);
+                break;
+            case "getMetadata":
+                final VideoController.Metadata metadata = videoController.getMetadata();
+                result.success(new HashMap<String, Object>() {{
+                    put("currentTime", metadata.getCurrentTime());
+                    put("duration", metadata.getDuration());
+                    put("videoWidth", metadata.getVideoWidth());
+                    put("videoHeight", metadata.getVideoHeight());
+                    put("autoplay", metadata.isAutoplay());
+                    put("muted", metadata.isMuted());
+                    put("volume", metadata.getVolume());
+                    put("type", metadata.getType());
+                    put("status", metadata.getStatus());
+                    put("ended", videoController.isEnded());
+                }});
+                break;
+            case "hasVideo":
+                result.success(videoController.hasVideo());
+                break;
+            case "isEnded":
+                result.success(videoController.isEnded());
+                break;
+            case "isPlaying":
+                result.success(videoController.isPlaying());
+                break;
+            case "mute":
+                boolean mute = call.argument("mute");
+                videoController.mute(mute);
+                result.success(null);
+                break;
+            case "play":
+                videoController.play();
+                result.success(null);
+                break;
+            case "pause":
+                videoController.pause();
                 result.success(null);
                 break;
             default:

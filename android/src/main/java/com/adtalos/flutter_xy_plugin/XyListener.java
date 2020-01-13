@@ -8,10 +8,10 @@ import io.flutter.plugin.xy.Listener;
 import io.flutter.plugin.xy.VideoController;
 import io.flutter.plugin.xy.VideoListener;
 
-class ListenerProxy implements Listener, VideoListener, DefaultCustomListener {
+class XyListener implements Listener, VideoListener, DefaultCustomListener {
     private MethodChannel channel;
 
-    ListenerProxy(MethodChannel channel) {
+    XyListener(MethodChannel channel) {
         this.channel = channel;
     }
 

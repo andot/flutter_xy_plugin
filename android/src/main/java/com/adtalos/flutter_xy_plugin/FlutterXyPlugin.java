@@ -56,7 +56,6 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCall
         channel.setMethodCallHandler(this);
         this.bannerViewHandler = new BannerViewHandler(applicationContext, activity, channel);
         registry.registerViewFactory("flutter_xy_plugin/XyView", new XyViewFactory(messenger));
-        registry.registerViewFactory("flutter_xy_plugin/XyNativeView", new XyNativeViewFactory(messenger));
 
         SDK.requestPermissions(activity);
     }

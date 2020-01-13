@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -38,6 +39,18 @@ class XyView extends StatelessWidget {
   final void Function(XyView view) onClicked;
   final void Function(XyView view) onLeftApplication;
   final void Function(XyView view) onClosed;
+  final void Function(XyView view, Map<String, dynamic> metadata)
+  onVideoLoad;
+  final void Function(XyView view) onVideoStart;
+  final void Function(XyView view) onVideoPlay;
+  final void Function(XyView view) onVideoPause;
+  final void Function(XyView view) onVideoEnd;
+  final void Function(XyView view, double volume, bool muted)
+  onVideoVolumeChange;
+  final void Function(XyView view, double currentTime, double duration)
+  onVideoTimeUpdate;
+  final void Function(XyView view) onVideoError;
+  final void Function(XyView view) onVideoBreak;
 
   XyView({
     Key key,
@@ -59,6 +72,15 @@ class XyView extends StatelessWidget {
     this.onClicked,
     this.onLeftApplication,
     this.onClosed,
+    this.onVideoLoad,
+    this.onVideoStart,
+    this.onVideoPlay,
+    this.onVideoPause,
+    this.onVideoEnd,
+    this.onVideoVolumeChange,
+    this.onVideoTimeUpdate,
+    this.onVideoError,
+    this.onVideoBreak,
   }) : super(key: key) {
     if (id.isNotEmpty) {
       _params["id"] = id;
@@ -102,18 +124,35 @@ class XyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AndroidView(
-      viewType: 'flutter_xy_plugin/XyView',
-      creationParams: _params,
-      creationParamsCodec: StandardMessageCodec(),
-      onPlatformViewCreated: (id) {
-        _holder.channel = new MethodChannel('flutter_xy_plugin/XyView_$id');
-        _holder.channel.setMethodCallHandler(_handleMethod);
-        if (onCreated != null) {
-          onCreated(this);
-        }
-      },
-    );
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return AndroidView(
+        viewType: 'flutter_xy_plugin/XyView',
+        creationParams: _params,
+        creationParamsCodec: StandardMessageCodec(),
+        onPlatformViewCreated: (id) {
+          _holder.channel = new MethodChannel('flutter_xy_plugin/XyView_$id');
+          _holder.channel.setMethodCallHandler(_handleMethod);
+          if (onCreated != null) {
+            onCreated(this);
+          }
+        },
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return UiKitView(
+        viewType: 'flutter_xy_plugin/XyView',
+        creationParams: _params,
+        creationParamsCodec: StandardMessageCodec(),
+        onPlatformViewCreated: (id) {
+          _holder.channel = new MethodChannel('flutter_xy_plugin/XyView_$id');
+          _holder.channel.setMethodCallHandler(_handleMethod);
+          if (onCreated != null) {
+            onCreated(this);
+          }
+        },
+      );
+    } else {
+      return Text("不支持的平台");
+    }
   }
 
   Future<void> impressionReport() {
@@ -135,6 +174,35 @@ class XyView extends StatelessWidget {
 
   Future<bool> get isLoaded {
     return _holder.channel.invokeMethod<bool>("isLoaded");
+  }
+
+  Future<Map<String, dynamic>> get metadata {
+    return _holder.channel.invokeMethod<Map<String, dynamic>>("getMetadata");
+  }
+
+  Future<bool> get hasVideo {
+    return _holder.channel.invokeMethod<bool>("hasVideo");
+  }
+
+  Future<bool> get isEnded {
+    return _holder.channel.invokeMethod<bool>("isEnded");
+  }
+
+  Future<bool> get isPlaying {
+    return _holder.channel.invokeMethod<bool>("isPlaying");
+  }
+
+  Future<void> mute(bool mute) {
+    return _holder.channel
+        .invokeMethod<void>("mute", <String, dynamic>{"mute": mute});
+  }
+
+  Future<void> play() {
+    return _holder.channel.invokeMethod<void>("play");
+  }
+
+  Future<void> pause() {
+    return _holder.channel.invokeMethod<void>("pause");
   }
 
   Future<dynamic> _handleMethod(MethodCall call) {
@@ -199,125 +267,6 @@ class XyView extends StatelessWidget {
           onClosed(this);
         }
         break;
-    }
-    return Future<dynamic>.value(null);
-  }
-}
-
-class XyNativeView extends XyView {
-  final void Function(XyNativeView view, Map<String, dynamic> metadata)
-      onVideoLoad;
-  final void Function(XyNativeView view) onVideoStart;
-  final void Function(XyNativeView view) onVideoPlay;
-  final void Function(XyNativeView view) onVideoPause;
-  final void Function(XyNativeView view) onVideoEnd;
-  final void Function(XyNativeView view, double volume, bool muted)
-      onVideoVolumeChange;
-  final void Function(XyNativeView view, double currentTime, double duration)
-      onVideoTimeUpdate;
-  final void Function(XyNativeView view) onVideoError;
-  final void Function(XyNativeView view) onVideoBreak;
-
-  XyNativeView(
-      {Key key,
-      String id = "",
-      Size size = Size.NATIVE,
-      bool animation = true,
-      bool carousel = false,
-      int retry = -1,
-      void Function(XyView view) onCreated,
-      void Function(XyView view) onViewClose,
-      void Function(XyView view, String name, String data) onCustom,
-      void Function(XyView view) onRendered,
-      void Function(XyView view) onImpressionFinished,
-      void Function(XyView view) onImpressionFailed,
-      void Function(XyView view, String error) onImpressionReceivedError,
-      void Function(XyView view) onLoaded,
-      void Function(XyView view, String error) onFailedToLoad,
-      void Function(XyView view) onOpened,
-      void Function(XyView view) onClicked,
-      void Function(XyView view) onLeftApplication,
-      void Function(XyView view) onClosed,
-      this.onVideoLoad,
-      this.onVideoStart,
-      this.onVideoPlay,
-      this.onVideoPause,
-      this.onVideoEnd,
-      this.onVideoVolumeChange,
-      this.onVideoTimeUpdate,
-      this.onVideoError,
-      this.onVideoBreak})
-      : super(
-          key: key,
-          id: id,
-          size: size,
-          animation: animation,
-          carousel: carousel,
-          retry: retry,
-          onCreated: onCreated,
-          onViewClose: onViewClose,
-          onCustom: onCustom,
-          onRendered: onRendered,
-          onImpressionFinished: onImpressionFinished,
-          onImpressionFailed: onImpressionFailed,
-          onImpressionReceivedError: onImpressionReceivedError,
-          onLoaded: onLoaded,
-          onFailedToLoad: onFailedToLoad,
-          onOpened: onOpened,
-          onClicked: onClicked,
-          onLeftApplication: onLeftApplication,
-          onClosed: onClosed,
-        );
-
-  @override
-  Widget build(BuildContext context) {
-    return AndroidView(
-      viewType: 'flutter_xy_plugin/XyNativeView',
-      creationParams: _params,
-      creationParamsCodec: StandardMessageCodec(),
-      onPlatformViewCreated: (id) {
-        _holder.channel =
-            new MethodChannel('flutter_xy_plugin/XyNativeView_$id');
-        _holder.channel.setMethodCallHandler(_handleMethod);
-        if (onCreated != null) {
-          onCreated(this);
-        }
-      },
-    );
-  }
-
-  Future<Map<String, dynamic>> get metadata {
-    return _holder.channel.invokeMethod<Map<String, dynamic>>("getMetadata");
-  }
-
-  Future<bool> get hasVideo {
-    return _holder.channel.invokeMethod<bool>("hasVideo");
-  }
-
-  Future<bool> get isEnded {
-    return _holder.channel.invokeMethod<bool>("isEnded");
-  }
-
-  Future<bool> get isPlaying {
-    return _holder.channel.invokeMethod<bool>("isPlaying");
-  }
-
-  Future<void> mute(bool mute) {
-    return _holder.channel
-        .invokeMethod<void>("mute", <String, dynamic>{"mute": mute});
-  }
-
-  Future<void> play() {
-    return _holder.channel.invokeMethod<void>("play");
-  }
-
-  Future<void> pause() {
-    return _holder.channel.invokeMethod<void>("pause");
-  }
-
-  @override
-  Future<dynamic> _handleMethod(MethodCall call) {
-    switch (call.method) {
       case "onVideoLoad":
         if (onVideoLoad != null) {
           onVideoLoad(this, Map<String, dynamic>.from(call.arguments));
@@ -366,7 +315,7 @@ class XyNativeView extends XyView {
         }
         break;
     }
-    return super._handleMethod(call);
+    return Future<dynamic>.value(null);
   }
 }
 
