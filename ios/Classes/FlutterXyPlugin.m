@@ -4,7 +4,7 @@
 
 #import "FlutterXyPlugin.h"
 
-@interface FlutterXyPluginListener: NSObject<AdtalosListener, AdtalosVideoListener>
+@interface XyListener: NSObject<AdtalosListener, AdtalosVideoListener>
 
 - (void) onAdRendered;
 - (void) onAdImpressionFinished;
@@ -30,86 +30,83 @@
 
 @end
 
-@implementation FlutterXyPluginListener {
+@implementation XyListener {
     FlutterMethodChannel *_channel;
-    NSString *_adUnitId;
 }
 
-- (instancetype)init:(FlutterMethodChannel *)channel withAdUnitId:(NSString *)adUnitId {
+- (instancetype)initWithChannel:(FlutterMethodChannel *)channel {
     if (self = [super init]) {
         _channel = channel;
-        _adUnitId = adUnitId;
     }
     return self;
 }
 
 - (void) onAdRendered {
-    [_channel invokeMethod:@"onRendered" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onRendered" arguments:nil];
 }
 
 - (void) onAdImpressionFinished {
-    [_channel invokeMethod:@"onImpressionFinished" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onImpressionFinished" arguments:nil];
 }
 
 - (void) onAdImpressionFailed {
-    [_channel invokeMethod:@"onImpressionFailed" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onImpressionFailed" arguments:nil];
 }
 
 - (void) onAdImpressionReceivedError:(NSError *)error {
-    [_channel invokeMethod:@"onImpressionReceivedError" arguments:@{@"id":_adUnitId, @"error": error.localizedDescription}];
+    [_channel invokeMethod:@"onImpressionReceivedError" arguments:@{@"error": error.localizedDescription}];
 }
 
 - (void) onAdLoaded {
-    [_channel invokeMethod:@"onLoaded" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onLoaded" arguments:nil];
 }
 
 - (void) onAdFailedToLoad:(NSError *)error {
-    [_channel invokeMethod:@"onFailedToLoad" arguments:@{@"id":_adUnitId, @"error": error.localizedDescription}];
+    [_channel invokeMethod:@"onFailedToLoad" arguments:@{@"error": error.localizedDescription}];
 }
 
 - (void) onAdClicked {
-    [_channel invokeMethod:@"onClicked" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onClicked" arguments:nil];
 }
 
 - (void) onAdLeftApplication {
-    [_channel invokeMethod:@"onLeftApplication" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onLeftApplication" arguments:nil];
 }
 
 - (void) onAdOpened {
-    [_channel invokeMethod:@"onOpened" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onOpened" arguments:nil];
 }
 
 - (void) onAdClosed {
-    [_channel invokeMethod:@"onClosed" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onClosed" arguments:nil];
 }
 
 - (void) onAdCustomEvent:(NSString *)name withData:(NSString *)data {
-    [_channel invokeMethod:name arguments:@{@"id":_adUnitId, @"data":data}];
+    [_channel invokeMethod:@"onCustom" arguments:@{@"name":name, @"data":data}];
 }
 
 - (void) onVideoLoad:(NSDictionary *)metadata {
-    [_channel invokeMethod:@"onVideoLoad" arguments:@{@"id":_adUnitId, @"metadata":metadata}];
+    [_channel invokeMethod:@"onVideoLoad" arguments:@{@"metadata":metadata}];
 }
 
 - (void) onVideoStart {
-    [_channel invokeMethod:@"onVideoStart" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoStart" arguments:nil];
 }
 
 - (void) onVideoPlay {
-    [_channel invokeMethod:@"onVideoPlay" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoPlay" arguments:nil];
 }
 
 - (void) onVideoPause {
-    [_channel invokeMethod:@"onVideoPause" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoPause" arguments:nil];
 }
 
 - (void) onVideoEnd {
-    [_channel invokeMethod:@"onVideoEnd" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoEnd" arguments:nil];
 }
 
 - (void) onVideoVolumeChange:(double)volume muted:(BOOL)muted {
     [_channel invokeMethod:@"onVideoVolumeChange" arguments:@{
-        @"id":_adUnitId,
         @"volume": [NSNumber numberWithDouble:volume],
         @"muted":[NSNumber numberWithBool:muted]
     }];
@@ -117,18 +114,17 @@
 
 - (void) onVideoTimeUpdate:(double)currentTime duration:(double)duration {
     [_channel invokeMethod:@"onVideoTimeUpdate" arguments:@{
-        @"id":_adUnitId,
         @"currentTime": [NSNumber numberWithDouble:currentTime],
         @"duration":[NSNumber numberWithDouble:duration]
     }];
 }
 
 - (void) onVideoError {
-    [_channel invokeMethod:@"onVideoError" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoError" arguments:nil];
 }
 
 - (void) onVideoBreak {
-    [_channel invokeMethod:@"onVideoBreak" arguments:@{@"id":_adUnitId}];
+    [_channel invokeMethod:@"onVideoBreak" arguments:nil];
 }
 
 @end
@@ -149,7 +145,7 @@ typedef NS_ENUM(int, AdtalosAdPosition) {
 static NSMutableDictionary *adViews;
 static NSMutableDictionary *listeners;
 static NSMutableDictionary *ads;
-static FlutterMethodChannel* channel;
+static FlutterMethodChannel *channel;
 
 @implementation FlutterXyPlugin {
     NSNumber* _landingPageDisplayActionBarEnabled;
@@ -167,6 +163,7 @@ static FlutterMethodChannel* channel;
     channel = [FlutterMethodChannel methodChannelWithName:@"flutter_xy_plugin" binaryMessenger:[registrar messenger]];
     FlutterXyPlugin* instance = [[FlutterXyPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
+    [registrar registerViewFactory:[[XyViewFactory alloc] initWithMessenger:[registrar messenger]] withId:@"flutter_xy_plugin/XyView"];
 }
 
 + (UIViewController *)rootViewController {
@@ -193,9 +190,11 @@ static FlutterMethodChannel* channel;
     AdtalosAdView *adView = [[AdtalosAdView alloc] initWithFrame:CGRectMake(x, y, width, height)];
     adView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     adViews[unitId] = adView;
-    FlutterXyPluginListener *listener = [[FlutterXyPluginListener alloc] init:channel withAdUnitId:unitId];
-    listeners[unitId] = listener;
+    XyListener *listener = [[XyListener alloc] initWithChannel:channel];
     adView.delegate = listener;
+    adView.closeEvent = ^{
+        [channel invokeMethod:@"onViewClose" arguments:nil];
+    };
     adView.videoController.delegate = listener;
     [adView loadAd:unitId];
     [FlutterXyPlugin.rootViewController.view addSubview:adView];
@@ -265,10 +264,6 @@ static FlutterMethodChannel* channel;
     AdtalosAdView *adView = [[AdtalosAdView alloc] initWithFrame:CGRectMake(point.x, point.y, width, height)];
     adView.autoresizingMask = autoresizingMask;
     adViews[unitId] = adView;
-    FlutterXyPluginListener *listener = [[FlutterXyPluginListener alloc] init:channel withAdUnitId:unitId];
-    listeners[unitId] = listener;
-    adView.delegate = listener;
-    adView.videoController.delegate = listener;
     [adView loadAd:unitId];
     [FlutterXyPlugin.rootViewController.view addSubview:adView];
 }
@@ -330,6 +325,158 @@ static FlutterMethodChannel* channel;
         return;
     }
     result(FlutterMethodNotImplemented);
+}
+
+@end
+
+@implementation XyView {
+    AdtalosAdView *_adView;
+    FlutterMethodChannel *_channel;
+    XyListener *_listener;
+}
+
+- (id)initWithFrame:(CGRect)frame binaryMessenger:(NSObject<FlutterBinaryMessenger> *)messenger viewId:(int64_t)viewId args:(id)args {
+    if (self = [super init]) {
+        CGFloat x = frame.origin.x;
+        CGFloat y = frame.origin.y;
+        if (args[@"size"] != nil) {
+            NSString *size = args[@"size"];
+            if ([size isEqualToString:@"BANNER"]) {
+                frame = CGRectMakeWithAdtalosBannerAdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE"]) {
+                frame = CGRectMakeWithAdtalosNative7to5AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_1TO1"]) {
+                frame = CGRectMakeWithAdtalosNative1to1AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_2TO1"]) {
+                frame = CGRectMakeWithAdtalosNative2to1AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_3TO2"]) {
+                frame = CGRectMakeWithAdtalosNative3to2AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_4TO3"]) {
+                frame = CGRectMakeWithAdtalosNative4to3AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_11TO4"]) {
+                frame = CGRectMakeWithAdtalosNative11to4AdSize(x, y);
+            } else if ([size isEqualToString:@"NATIVE_16TO9"]) {
+                frame = CGRectMakeWithAdtalosNative16to9AdSize(x, y);
+            }
+        }
+        if (args[@"width"] != nil && args[@"height"] != nil) {
+            CGFloat width = ((NSNumber *)args[@"width"]).doubleValue;
+            CGFloat height = ((NSNumber *)args[@"height"]).doubleValue;
+            frame = CGRectMake(x, y, width, height);
+        }
+        _adView = [[AdtalosAdView alloc] initWithFrame:frame];
+        _channel = [FlutterMethodChannel methodChannelWithName:[NSString stringWithFormat:@"flutter_xy_plugin/XyView_%lld", viewId] binaryMessenger:messenger];
+        __weak __typeof__(self) weakSelf = self;
+        [_channel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+            if (weakSelf != nil) {
+                __strong __typeof__(self) strongSelf = weakSelf;
+                [strongSelf handleMethodCall:call result:result];
+            }
+        }];
+        _adView.closeEvent = ^{
+            if (weakSelf != nil) {
+                __strong __typeof__(self) strongSelf = weakSelf;
+                [strongSelf->_channel invokeMethod:@"onViewClose" arguments:nil];
+            }
+        };
+        _listener = [[XyListener alloc] initWithChannel:_channel];
+        _adView.delegate = _listener;
+        _adView.videoController.delegate = _listener;
+        if (args[@"carousel"] != nil) {
+            _adView.carouselModeEnabled = ((NSNumber *)args[@"carousel"]).boolValue;
+        }
+        if (args[@"retry"] != nil) {
+            [_adView autoRetry: ((NSNumber *)args[@"retry"]).integerValue];
+        }
+        if (args[@"id"] != nil) {
+            [_adView loadAd:args[@"id"]];
+        }
+    }
+    return self;
+}
+
+- (nonnull UIView *)view {
+    return _adView;
+}
+
+- (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+    if ([call.method isEqualToString:@"impressionReport"]) {
+        [_adView impressionReport];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"load"]) {
+        [_adView loadAd:call.arguments[@"id"] autoShow:NO];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"isLoaded"]) {
+        result([NSNumber numberWithBool:_adView.isLoaded]);
+        return;
+    }
+    if ([call.method isEqualToString:@"show"]) {
+        [_adView show];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"render"]) {
+        [_adView render];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"getMetadata"]) {
+        result(_adView.videoController.metadata);
+        return;
+    }
+    if ([call.method isEqualToString:@"hasVideo"]) {
+        result([NSNumber numberWithBool:_adView.videoController.hasVideo]);
+        return;
+    }
+    if ([call.method isEqualToString:@"isEnded"]) {
+        result([NSNumber numberWithBool:_adView.videoController.isEnded]);
+        return;
+    }
+    if ([call.method isEqualToString:@"isPlaying"]) {
+        result([NSNumber numberWithBool:_adView.videoController.isPlaying]);
+        return;
+    }
+    if ([call.method isEqualToString:@"mute"]) {
+        [_adView.videoController mute:((NSNumber *)call.arguments[@"mute"]).boolValue];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"play"]) {
+        [_adView.videoController play];
+        result(nil);
+        return;
+    }
+    if ([call.method isEqualToString:@"pause"]) {
+        [_adView.videoController pause];
+        result(nil);
+        return;
+    }
+    result(FlutterMethodNotImplemented);
+}
+
+@end
+
+@implementation XyViewFactory {
+    NSObject<FlutterBinaryMessenger>* _messenger;
+}
+
+- (instancetype) initWithMessenger:(NSObject<FlutterBinaryMessenger>*)messenger {
+    if (self = [super init]) {
+        _messenger = messenger;
+    }
+    return self;
+}
+
+-(NSObject<FlutterMessageCodec> *)createArgsCodec{
+    return [FlutterStandardMessageCodec sharedInstance];
+}
+
+- (nonnull NSObject<FlutterPlatformView> *)createWithFrame:(CGRect)frame viewIdentifier:(int64_t)viewId arguments:(id _Nullable)args {
+    return [[XyView alloc] initWithFrame:frame binaryMessenger:_messenger viewId:viewId args:args];
 }
 
 @end

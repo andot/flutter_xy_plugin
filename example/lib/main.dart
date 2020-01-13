@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                           '209A03F87BA3B4EB82BEC9E5F8B41383');
                     }),
                 Container(
-                    height: 40,
+                    height: 80,
                     child: XyView(
 //                      id : "209A03F87BA3B4EB82BEC9E5F8B41383",
                       onCreated: (view) {
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                       },
                     )),
                 Container(
-                    height: 40,
+                    height: 80,
                     child: XyView(
                       id : "96753DCF925E8DC7C105B3D3ED1138EA",
 //                      onCreated: (view) {
