@@ -1,8 +1,8 @@
 PODS:
-  - AdtalosSDK (1.4.1)
+  - AdtalosSDK (1.4.2)
   - Flutter (1.0.0)
   - flutter_xy_plugin (0.0.1):
-    - AdtalosSDK (~> 1.4.1)
+    - AdtalosSDK (~> 1.4.2)
     - Flutter
 
 DEPENDENCIES:
@@ -20,9 +20,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_xy_plugin/ios"
 
 SPEC CHECKSUMS:
-  AdtalosSDK: d7d12acb9d3abccb59187deaf302767f88a35f41
+  AdtalosSDK: b3c0bd9b0a8a9d71fdbacee17a5d92f8feed0b0f
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_xy_plugin: 3361b1a5b80ef3033f48abc46dee7eeb61a02fdd
+  flutter_xy_plugin: ef12c5e43e2b90e07249b7f87ad8779143c52dfa
 
 PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
