@@ -130,7 +130,7 @@ class XyView extends StatelessWidget {
         creationParams: _params,
         creationParamsCodec: StandardMessageCodec(),
         onPlatformViewCreated: (id) {
-          _holder.channel = new MethodChannel('flutter_xy_plugin/XyView_$id');
+          _holder.channel = MethodChannel('flutter_xy_plugin/XyView_$id');
           _holder.channel.setMethodCallHandler(_handleMethod);
           if (onCreated != null) {
             onCreated(this);
@@ -143,7 +143,7 @@ class XyView extends StatelessWidget {
         creationParams: _params,
         creationParamsCodec: StandardMessageCodec(),
         onPlatformViewCreated: (id) {
-          _holder.channel = new MethodChannel('flutter_xy_plugin/XyView_$id');
+          _holder.channel = MethodChannel('flutter_xy_plugin/XyView_$id');
           _holder.channel.setMethodCallHandler(_handleMethod);
           if (onCreated != null) {
             onCreated(this);
@@ -269,7 +269,7 @@ class XyView extends StatelessWidget {
         break;
       case "onVideoLoad":
         if (onVideoLoad != null) {
-          onVideoLoad(this, Map<String, dynamic>.from(call.arguments));
+          onVideoLoad(this, Map<String, dynamic>.from(call.arguments["metadata"]));
         }
         break;
       case "onVideoStart":
@@ -319,6 +319,91 @@ class XyView extends StatelessWidget {
   }
 }
 
+enum Type {
+  Interstitial,
+  Splash,
+  RewardedVideo,
+}
+
+class XyController {
+  final _params = <String, dynamic>{};
+  final void Function(XyController controller) onCreated;
+  final void Function(XyController controller) onViewClose;
+  final void Function(XyController controller, String name, String data) onCustom;
+  final void Function(XyController controller) onRendered;
+  final void Function(XyController controller) onImpressionFinished;
+  final void Function(XyController controller) onImpressionFailed;
+  final void Function(XyController controller, String error) onImpressionReceivedError;
+  final void Function(XyController controller) onLoaded;
+  final void Function(XyController controller, String error) onFailedToLoad;
+  final void Function(XyController controller) onOpened;
+  final void Function(XyController controller) onClicked;
+  final void Function(XyController controller) onLeftApplication;
+  final void Function(XyController controller) onClosed;
+  final void Function(XyController controller, Map<String, dynamic> metadata)
+  onVideoLoad;
+  final void Function(XyController controller) onVideoStart;
+  final void Function(XyController controller) onVideoPlay;
+  final void Function(XyController controller) onVideoPause;
+  final void Function(XyController controller) onVideoEnd;
+  final void Function(XyController controller, double volume, bool muted)
+  onVideoVolumeChange;
+  final void Function(XyController controller, double currentTime, double duration)
+  onVideoTimeUpdate;
+  final void Function(XyController controller) onVideoError;
+  final void Function(XyController controller) onVideoBreak;
+
+  XyController(final String id, {
+    Type type = Type.Interstitial,
+    int retry = -1,
+    this.onCreated,
+    this.onViewClose,
+    this.onCustom,
+    this.onRendered,
+    this.onImpressionFinished,
+    this.onImpressionFailed,
+    this.onImpressionReceivedError,
+    this.onLoaded,
+    this.onFailedToLoad,
+    this.onOpened,
+    this.onClicked,
+    this.onLeftApplication,
+    this.onClosed,
+    this.onVideoLoad,
+    this.onVideoStart,
+    this.onVideoPlay,
+    this.onVideoPause,
+    this.onVideoEnd,
+    this.onVideoVolumeChange,
+    this.onVideoTimeUpdate,
+    this.onVideoError,
+    this.onVideoBreak,
+  }) {
+    _params["id"] = id;
+    _params["type"] = type.index;
+    if (retry >= 0) {
+      _params["retry"] = retry;
+    }
+    FlutterXyPlugin.createController(this, _params).then((value) {
+      if (onCreated != null) {
+        onCreated(this);
+      }
+    });
+  }
+
+  Future<void> load() {
+    return FlutterXyPlugin.load(_params["id"]);
+  }
+
+  Future<void> show([int timeout = 3000]) {
+    return FlutterXyPlugin.show(_params["id"], timeout);
+  }
+
+  Future<bool> get isLoaded {
+    return FlutterXyPlugin.isLoaded(_params["id"]);
+  }
+}
+
 enum Position {
   Absolute,
   TopLeft,
@@ -333,9 +418,147 @@ enum Position {
 }
 
 class FlutterXyPlugin {
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_xy_plugin');
+  static MethodChannel _channel = _initChannel();
   static String _oaid;
+  static final _controllers = <String, XyController>{};
+
+  static MethodChannel _initChannel() {
+    MethodChannel channel = MethodChannel('flutter_xy_plugin');
+    channel.setMethodCallHandler(_handleMethod);
+    return channel;
+  }
+
+  static Future<dynamic> _handleMethod(MethodCall call) {
+    final id = call.arguments["id"];
+    final controller = _controllers[id];
+    switch (call.method) {
+      case "onViewClose":
+        if (controller.onViewClose != null) {
+          controller.onViewClose(controller);
+        }
+        break;
+      case "onCustom":
+        if (controller.onCustom != null) {
+          controller.onCustom(controller, call.arguments["name"], call.arguments["data"]);
+        }
+        break;
+      case "onRendered":
+        if (controller.onRendered != null) {
+          controller.onRendered(controller);
+        }
+        break;
+      case "onImpressionFinished":
+        if (controller.onImpressionFinished != null) {
+          controller.onImpressionFinished(controller);
+        }
+        break;
+      case "onImpressionFailed":
+        if (controller.onImpressionFailed != null) {
+          controller.onImpressionFailed(controller);
+        }
+        break;
+      case "onImpressionReceivedError":
+        if (controller.onImpressionReceivedError != null) {
+          controller.onImpressionReceivedError(controller, call.arguments["error"]);
+        }
+        break;
+      case "onLoaded":
+        if (controller.onLoaded != null) {
+          controller.onLoaded(controller);
+        }
+        break;
+      case "onFailedToLoad":
+        if (controller.onFailedToLoad != null) {
+          controller.onFailedToLoad(controller, call.arguments["error"]);
+        }
+        break;
+      case "onOpened":
+        if (controller.onOpened != null) {
+          controller.onOpened(controller);
+        }
+        break;
+      case "onClicked":
+        if (controller.onClicked != null) {
+          controller.onClicked(controller);
+        }
+        break;
+      case "onLeftApplication":
+        if (controller.onLeftApplication != null) {
+          controller.onLeftApplication(controller);
+        }
+        break;
+      case "onClosed":
+        if (controller.onClosed != null) {
+          controller.onClosed(controller);
+        }
+        break;
+      case "onVideoLoad":
+        if (controller.onVideoLoad != null) {
+          controller.onVideoLoad(controller, Map<String, dynamic>.from(call.arguments["metadata"]));
+        }
+        break;
+      case "onVideoStart":
+        if (controller.onVideoStart != null) {
+          controller.onVideoStart(controller);
+        }
+        break;
+      case "onVideoPlay":
+        if (controller.onVideoPlay != null) {
+          controller.onVideoPlay(controller);
+        }
+        break;
+      case "onVideoPause":
+        if (controller.onVideoPause != null) {
+          controller.onVideoPause(controller);
+        }
+        break;
+      case "onVideoEnd":
+        if (controller.onVideoEnd != null) {
+          controller.onVideoEnd(controller);
+        }
+        break;
+      case "onVideoVolumeChange":
+        if (controller.onVideoVolumeChange != null) {
+          controller.onVideoVolumeChange(
+              controller, call.arguments["volume"], call.arguments["muted"]);
+        }
+        break;
+      case "onVideoTimeUpdate":
+        if (controller.onVideoTimeUpdate != null) {
+          controller.onVideoTimeUpdate(
+              controller, call.arguments["currentTime"], call.arguments["duration"]);
+        }
+        break;
+      case "onVideoError":
+        if (controller.onVideoError != null) {
+          controller.onVideoError(controller);
+        }
+        break;
+      case "onVideoBreak":
+        if (controller.onVideoBreak != null) {
+          controller.onVideoBreak(controller);
+        }
+        break;
+    }
+    return Future<dynamic>.value(null);
+  }
+
+  static Future<void> createController(XyController controller, Map<String, dynamic> args) {
+    _controllers[args["id"]] = controller;
+    return _channel.invokeMethod('createController', args);
+  }
+
+  static Future<void> load(String id) {
+    return _channel.invokeMethod('load', <String, dynamic>{"id": id});
+  }
+
+  static Future<void> show(String id, int timeout) {
+    return _channel.invokeMethod('show', <String, dynamic>{"id": id, "timeout": timeout});
+  }
+
+  static Future<bool> isLoaded(String id) {
+    return _channel.invokeMethod('isLoaded', <String, dynamic>{"id": id});
+  }
 
   static String get oaid {
     return _oaid;
@@ -422,4 +645,5 @@ class FlutterXyPlugin {
       "y": y
     });
   }
+
 }
