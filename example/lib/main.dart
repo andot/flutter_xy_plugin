@@ -21,6 +21,16 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    XyController(
+      "5C3DD65A809B08A2D6CF3DEFBC7E09C7",
+      type: Type.Splash,
+      onCreated: (controller) {
+        controller.load();
+      },
+      onLoaded: (controller) {
+        controller.show();
+      },
+    );
 //    String value;
 //    // Platform messages may fail, so we use a try/catch PlatformException.
 //    try {
@@ -94,6 +104,34 @@ class _MyAppState extends State<MyApp> {
                       FlutterXyPlugin.showBannerRelative(
                           '96753DCF925E8DC7C105B3D3ED1138EA',
                           position: Position.BottomCenter);
+                    }),
+                RaisedButton(
+                    child: const Text('Show Interstitial Ad'),
+                    onPressed: () {
+                      XyController(
+                        "2EF810225D10260506CBB704C96C5325",
+                        type: Type.Interstitial,
+                        onCreated: (controller) {
+                          controller.load();
+                        },
+                        onLoaded: (controller) {
+                          controller.show();
+                        },
+                      );
+                    }),
+                RaisedButton(
+                    child: const Text('Show RewardedVideo Ad'),
+                    onPressed: () {
+                      XyController(
+                        "527E187C5DEA600C35309759469ADAA8",
+                        type: Type.RewardedVideo,
+                        onCreated: (controller) {
+                          controller.load();
+                        },
+                        onLoaded: (controller) {
+                          controller.show();
+                        },
+                      );
                     }),
               ].map((Widget button) {
                 return Padding(
