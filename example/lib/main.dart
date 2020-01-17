@@ -62,12 +62,6 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RaisedButton(
-                    child: const Text('Show Banner on Absolute Position'),
-                    onPressed: () {
-                      FlutterXyPlugin.showBannerAbsolute(
-                          '209A03F87BA3B4EB82BEC9E5F8B41383');
-                    }),
                 Container(
                     height: 80,
                     child: XyView(
@@ -98,13 +92,6 @@ class _MyAppState extends State<MyApp> {
                             "onImpressionFinished: 96753DCF925E8DC7C105B3D3ED1138EA");
                       },
                     )),
-                RaisedButton(
-                    child: const Text('Show Banner on Relative Position'),
-                    onPressed: () {
-                      FlutterXyPlugin.showBannerRelative(
-                          '96753DCF925E8DC7C105B3D3ED1138EA',
-                          position: Position.BottomCenter);
-                    }),
                 RaisedButton(
                     child: const Text('Show Interstitial Ad'),
                     onPressed: () {
