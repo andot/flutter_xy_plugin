@@ -22,7 +22,7 @@ public class XyView implements PlatformView, MethodChannel.MethodCallHandler {
         view = new io.flutter.plugin.xy.View(context);
         channel = new MethodChannel(messenger, "flutter_xy_plugin/XyView_" + id);
         channel.setMethodCallHandler(this);
-        XyListener listener = new XyListener(channel);
+        XyListener listener = new XyListener(channel, "");
         view.setListener(listener);
         view.setDefaultCustomListener(listener);
         view.getVideoController().setVideoListener(listener);

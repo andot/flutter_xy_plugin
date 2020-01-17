@@ -355,6 +355,7 @@ class XyController {
 
   XyController(final String id, {
     Type type = Type.Interstitial,
+    bool immersive = true,
     int retry = -1,
     this.onCreated,
     this.onViewClose,
@@ -381,6 +382,7 @@ class XyController {
   }) {
     _params["id"] = id;
     _params["type"] = type.index;
+    _params["immersive"] = immersive;
     if (retry >= 0) {
       _params["retry"] = retry;
     }

@@ -10,15 +10,22 @@ import io.flutter.plugin.xy.VideoListener;
 
 class XyListener implements Listener, VideoListener, DefaultCustomListener {
     private MethodChannel channel;
+    private String id;
+    private HashMap<String, Object> defaultArguments;
 
-    XyListener(MethodChannel channel) {
+    XyListener(MethodChannel channel, final String id) {
         this.channel = channel;
+        this.id = id;
+        defaultArguments = new HashMap<String, Object>() {{
+            put("id", id);
+        }};
     }
 
     @Override
     public void on(final String name, final String data) {
         if (channel != null) {
             channel.invokeMethod("onCustom", new HashMap<String, Object>() {{
+                put("id", id);
                 put("name", name);
                 put("data", data);
             }});
@@ -28,7 +35,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     @Override
     public void onRendered() {
         if (channel != null) {
-            channel.invokeMethod("onRendered", null);
+            channel.invokeMethod("onRendered", defaultArguments);
         }
     }
 
@@ -36,7 +43,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onImpressionFinished() {
         if (channel != null) {
             channel.invokeMethod("onImpressionFinished",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -44,7 +51,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onImpressionFailed() {
         if (channel != null) {
             channel.invokeMethod("onImpressionFailed",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -53,6 +60,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onImpressionReceivedError",
                     new HashMap<String, Object>() {{
+                        put("id", id);
                         put("error", errorCode + ":" + description);
                     }});
         }
@@ -62,7 +70,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onLoaded() {
         if (channel != null) {
             channel.invokeMethod("onLoaded",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -71,6 +79,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onFailedToLoad",
                     new HashMap<String, Object>() {{
+                        put("id", id);
                         put("error", e.getMessage());
                     }});
         }
@@ -80,7 +89,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onOpened() {
         if (channel != null) {
             channel.invokeMethod("onOpened",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -88,7 +97,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onClicked() {
         if (channel != null) {
             channel.invokeMethod("onClicked",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -96,7 +105,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onLeftApplication() {
         if (channel != null) {
             channel.invokeMethod("onLeftApplication",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -104,26 +113,28 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onClosed() {
         if (channel != null) {
             channel.invokeMethod("onClosed",
-                    null);
+                    defaultArguments);
         }
     }
 
     @Override
     public void onVideoLoad(final VideoController.Metadata metadata) {
         if (channel != null) {
-            channel.invokeMethod("onVideoLoad",
-                    new HashMap<String, Object>() {{
-                        put("currentTime", metadata.getCurrentTime());
-                        put("duration", metadata.getDuration());
-                        put("videoWidth", metadata.getVideoWidth());
-                        put("videoHeight", metadata.getVideoHeight());
-                        put("autoplay", metadata.isAutoplay());
-                        put("muted", metadata.isMuted());
-                        put("volume", metadata.getVolume());
-                        put("type", metadata.getType());
-                        put("status", metadata.getStatus());
-                        put("ended", false);
-                    }});
+            channel.invokeMethod("onVideoLoad", new HashMap<String, Object>() {{
+                put("id", id);
+                put("metadata", new HashMap<String, Object>() {{
+                    put("currentTime", metadata.getCurrentTime());
+                    put("duration", metadata.getDuration());
+                    put("videoWidth", metadata.getVideoWidth());
+                    put("videoHeight", metadata.getVideoHeight());
+                    put("autoplay", metadata.isAutoplay());
+                    put("muted", metadata.isMuted());
+                    put("volume", metadata.getVolume());
+                    put("type", metadata.getType());
+                    put("status", metadata.getStatus());
+                    put("ended", false);
+                }});
+            }});
         }
     }
 
@@ -131,7 +142,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoStart() {
         if (channel != null) {
             channel.invokeMethod("onVideoStart",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -139,7 +150,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoPlay() {
         if (channel != null) {
             channel.invokeMethod("onVideoPlay",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -147,7 +158,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoPause() {
         if (channel != null) {
             channel.invokeMethod("onVideoPause",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -155,7 +166,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoEnd() {
         if (channel != null) {
             channel.invokeMethod("onVideoEnd",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -164,6 +175,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onVideoVolumeChange",
                     new HashMap<String, Object>() {{
+                        put("id", id);
                         put("volume", volume);
                         put("muted", muted);
                     }});
@@ -175,6 +187,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
         if (channel != null) {
             channel.invokeMethod("onVideoTimeUpdate",
                     new HashMap<String, Object>() {{
+                        put("id", id);
                         put("currentTime", currentTime);
                         put("duration", duration);
                     }});
@@ -185,7 +198,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoError() {
         if (channel != null) {
             channel.invokeMethod("onVideoError",
-                    null);
+                    defaultArguments);
         }
     }
 
@@ -193,7 +206,7 @@ class XyListener implements Listener, VideoListener, DefaultCustomListener {
     public void onVideoBreak() {
         if (channel != null) {
             channel.invokeMethod("onVideoBreak",
-                    null);
+                    defaultArguments);
         }
     }
 

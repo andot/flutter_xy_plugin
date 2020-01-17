@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.HashMap;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -14,6 +16,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.platform.PlatformViewRegistry;
+import io.flutter.plugin.xy.Controller;
 import io.flutter.plugin.xy.LandingPageActivity;
 import io.flutter.plugin.xy.SDK;
 
@@ -22,7 +25,7 @@ import io.flutter.plugin.xy.SDK;
  */
 public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
     private final static FlutterXyPlugin plugin = new FlutterXyPlugin();
-    private BannerViewHandler bannerViewHandler;
+    private final static HashMap<String, Controller> controllers = new HashMap<>();
     private Context applicationContext;
     private MethodChannel channel;
     private Activity activity;
@@ -54,9 +57,8 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCall
         this.applicationContext = applicationContext;
         this.channel = new MethodChannel(messenger, "flutter_xy_plugin");
         channel.setMethodCallHandler(this);
-        this.bannerViewHandler = new BannerViewHandler(applicationContext, activity, channel);
         registry.registerViewFactory("flutter_xy_plugin/XyView", new XyViewFactory(messenger));
-
+        SDK.init(applicationContext);
         SDK.requestPermissions(activity);
     }
 
@@ -126,30 +128,49 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCall
                 LandingPageActivity.setFullScreenEnabled(call.<Boolean>argument("enabled"));
                 result.success(null);
                 break;
-            case "showBannerAbsolute":
-                if (activity != null) {
-                    bannerViewHandler.showAbsolute(
-                            call.<String>argument("id"),
-                            call.<Integer>argument("width"),
-                            call.<Integer>argument("height"),
-                            call.<Integer>argument("x"),
-                            call.<Integer>argument("y")
-                    );
+            case "createController": {
+                String id = call.argument("id");
+                int type = call.argument("type");
+                Controller controller = new Controller(id, type);
+                controllers.put(id, controller);
+                XyListener listener = new XyListener(channel, id);
+                controller.setListener(listener);
+                controller.setDefaultCustomListener(listener);
+                controller.setVideoListener(listener);
+                boolean immersive = call.argument("immersive");
+                controller.setImmersiveMode(immersive);
+                if (call.hasArgument("retry")) {
+                    int retry = call.argument("retry");
+                    controller.autoRetry(retry);
                 }
                 result.success(null);
                 break;
-            case "showBannerRelative":
-                if (activity != null) {
-                    bannerViewHandler.showRelative(
-                            call.<String>argument("id"),
-                            call.<Integer>argument("width"),
-                            call.<Integer>argument("height"),
-                            call.<Integer>argument("position"),
-                            call.<Integer>argument("y")
-                    );
+            }
+            case "load": {
+                String id = call.argument("id");
+                Controller controller = controllers.get(id);
+                controller.load();
+                result.success(null);
+                break;
+            }
+            case "show": {
+                String id = call.argument("id");
+                Controller controller = controllers.get(id);
+                if (call.hasArgument("timeout")) {
+                    int timeout = call.argument("timeout");
+                    controller.show(timeout);
+                } else {
+                    controller.show();
                 }
                 result.success(null);
                 break;
+            }
+            case "isLoaded": {
+                String id = call.argument("id");
+                Controller controller = controllers.get(id);
+                result.success(controller.isLoaded());
+                break;
+            }
             default:
                 result.notImplemented();
         }
