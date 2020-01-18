@@ -1,8 +1,7 @@
 name: flutter_xy_plugin
 description: 新义互联广告 SDK Flutter 插件.
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/adtalos/flutter_xy_plugin
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
