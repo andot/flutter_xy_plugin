@@ -39,16 +39,15 @@ class XyView extends StatelessWidget {
   final void Function(XyView view) onClicked;
   final void Function(XyView view) onLeftApplication;
   final void Function(XyView view) onClosed;
-  final void Function(XyView view, Map<String, dynamic> metadata)
-  onVideoLoad;
+  final void Function(XyView view, Map<String, dynamic> metadata) onVideoLoad;
   final void Function(XyView view) onVideoStart;
   final void Function(XyView view) onVideoPlay;
   final void Function(XyView view) onVideoPause;
   final void Function(XyView view) onVideoEnd;
   final void Function(XyView view, double volume, bool muted)
-  onVideoVolumeChange;
+      onVideoVolumeChange;
   final void Function(XyView view, double currentTime, double duration)
-  onVideoTimeUpdate;
+      onVideoTimeUpdate;
   final void Function(XyView view) onVideoError;
   final void Function(XyView view) onVideoBreak;
 
@@ -269,7 +268,8 @@ class XyView extends StatelessWidget {
         break;
       case "onVideoLoad":
         if (onVideoLoad != null) {
-          onVideoLoad(this, Map<String, dynamic>.from(call.arguments["metadata"]));
+          onVideoLoad(
+              this, Map<String, dynamic>.from(call.arguments["metadata"]));
         }
         break;
       case "onVideoStart":
@@ -329,11 +329,13 @@ class XyController {
   final _params = <String, dynamic>{};
   final void Function(XyController controller) onCreated;
   final void Function(XyController controller) onViewClose;
-  final void Function(XyController controller, String name, String data) onCustom;
+  final void Function(XyController controller, String name, String data)
+      onCustom;
   final void Function(XyController controller) onRendered;
   final void Function(XyController controller) onImpressionFinished;
   final void Function(XyController controller) onImpressionFailed;
-  final void Function(XyController controller, String error) onImpressionReceivedError;
+  final void Function(XyController controller, String error)
+      onImpressionReceivedError;
   final void Function(XyController controller) onLoaded;
   final void Function(XyController controller, String error) onFailedToLoad;
   final void Function(XyController controller) onOpened;
@@ -341,19 +343,21 @@ class XyController {
   final void Function(XyController controller) onLeftApplication;
   final void Function(XyController controller) onClosed;
   final void Function(XyController controller, Map<String, dynamic> metadata)
-  onVideoLoad;
+      onVideoLoad;
   final void Function(XyController controller) onVideoStart;
   final void Function(XyController controller) onVideoPlay;
   final void Function(XyController controller) onVideoPause;
   final void Function(XyController controller) onVideoEnd;
   final void Function(XyController controller, double volume, bool muted)
-  onVideoVolumeChange;
-  final void Function(XyController controller, double currentTime, double duration)
-  onVideoTimeUpdate;
+      onVideoVolumeChange;
+  final void Function(
+          XyController controller, double currentTime, double duration)
+      onVideoTimeUpdate;
   final void Function(XyController controller) onVideoError;
   final void Function(XyController controller) onVideoBreak;
 
-  XyController(final String id, {
+  XyController(
+    final String id, {
     Type type = Type.Interstitial,
     bool immersive = true,
     int retry = -1,
@@ -441,7 +445,8 @@ class FlutterXyPlugin {
         break;
       case "onCustom":
         if (controller.onCustom != null) {
-          controller.onCustom(controller, call.arguments["name"], call.arguments["data"]);
+          controller.onCustom(
+              controller, call.arguments["name"], call.arguments["data"]);
         }
         break;
       case "onRendered":
@@ -461,7 +466,8 @@ class FlutterXyPlugin {
         break;
       case "onImpressionReceivedError":
         if (controller.onImpressionReceivedError != null) {
-          controller.onImpressionReceivedError(controller, call.arguments["error"]);
+          controller.onImpressionReceivedError(
+              controller, call.arguments["error"]);
         }
         break;
       case "onLoaded":
@@ -496,7 +502,8 @@ class FlutterXyPlugin {
         break;
       case "onVideoLoad":
         if (controller.onVideoLoad != null) {
-          controller.onVideoLoad(controller, Map<String, dynamic>.from(call.arguments["metadata"]));
+          controller.onVideoLoad(controller,
+              Map<String, dynamic>.from(call.arguments["metadata"]));
         }
         break;
       case "onVideoStart":
@@ -527,8 +534,8 @@ class FlutterXyPlugin {
         break;
       case "onVideoTimeUpdate":
         if (controller.onVideoTimeUpdate != null) {
-          controller.onVideoTimeUpdate(
-              controller, call.arguments["currentTime"], call.arguments["duration"]);
+          controller.onVideoTimeUpdate(controller,
+              call.arguments["currentTime"], call.arguments["duration"]);
         }
         break;
       case "onVideoError":
@@ -545,7 +552,8 @@ class FlutterXyPlugin {
     return Future<dynamic>.value(null);
   }
 
-  static Future<void> createController(XyController controller, Map<String, dynamic> args) {
+  static Future<void> createController(
+      XyController controller, Map<String, dynamic> args) {
     _controllers[args["id"]] = controller;
     return _channel.invokeMethod('createController', args);
   }
@@ -555,7 +563,8 @@ class FlutterXyPlugin {
   }
 
   static Future<void> show(String id, int timeout) {
-    return _channel.invokeMethod('show', <String, dynamic>{"id": id, "timeout": timeout});
+    return _channel
+        .invokeMethod('show', <String, dynamic>{"id": id, "timeout": timeout});
   }
 
   static Future<bool> isLoaded(String id) {
@@ -597,5 +606,4 @@ class FlutterXyPlugin {
     _channel.invokeMethod('setLandingPageFullScreenEnabled',
         <String, dynamic>{"enabled": enabled});
   }
-
 }
