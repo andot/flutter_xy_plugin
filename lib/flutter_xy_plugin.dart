@@ -328,7 +328,6 @@ enum Type {
 class XyController {
   final _params = <String, dynamic>{};
   final void Function(XyController controller) onCreated;
-  final void Function(XyController controller) onViewClose;
   final void Function(XyController controller, String name, String data)
       onCustom;
   final void Function(XyController controller) onRendered;
@@ -362,7 +361,6 @@ class XyController {
     bool immersive = true,
     int retry = -1,
     this.onCreated,
-    this.onViewClose,
     this.onCustom,
     this.onRendered,
     this.onImpressionFinished,
@@ -438,11 +436,6 @@ class FlutterXyPlugin {
     final id = call.arguments["id"];
     final controller = _controllers[id];
     switch (call.method) {
-      case "onViewClose":
-        if (controller.onViewClose != null) {
-          controller.onViewClose(controller);
-        }
-        break;
       case "onCustom":
         if (controller.onCustom != null) {
           controller.onCustom(
