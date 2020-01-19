@@ -78,18 +78,20 @@ class _MyAppState extends State<MyApp> {
                       },
                     )),
                 Container(
-                    height: 80,
+                    height: 300,
                     child: XyView(
-                      id : "96753DCF925E8DC7C105B3D3ED1138EA",
+                      id: "98738D91D3BB241458D3FAE5A5BF7B34",
+                      size: Size.NATIVE,
+                      carousel: false,
 //                      onCreated: (view) {
-//                        view.load("96753DCF925E8DC7C105B3D3ED1138EA");
+//                        view.load("98738D91D3BB241458D3FAE5A5BF7B34");
 //                      },
 //                      onLoaded: (view) {
 //                        view.show();
 //                      },
                       onImpressionFinished: (view) {
                         print(
-                            "onImpressionFinished: 96753DCF925E8DC7C105B3D3ED1138EA");
+                            "onImpressionFinished: 98738D91D3BB241458D3FAE5A5BF7B34");
                       },
                     )),
                 RaisedButton(

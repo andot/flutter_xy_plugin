@@ -1,29 +1,26 @@
-# flutter_xy_plugin
+# 新义 SDK flutter 插件 
 
-Flutter plugin for Adtalos SDK, supporting banner, native, interstitial
-(full-screen/half-screen), splash and rewarded video ads using the Adtalos SDK
-[Android API](https://github.com/adtalos/android-xy-sdk-demo/wiki) and
-[iOS API](https://github.com/adtalos/ios-ads-sdk-demo/wiki).
+新义 SDK Flutter 插件支持横幅，原生，插屏，开屏和激励视频广告。
 
-## Setup
+## 安装
 
 ### iOS
 
-To use this plugin on iOS you need to opt-in for the embedded views preview by adding a boolean property to the app's Info.plist file, with the key io.flutter.embedded_views_preview and the value YES.
+该插件使用的内嵌原生视图功能在 iOS 中属于预览功能，需要在应用的 Info.plist 中设置 `io.flutter.embedded_views_preview` 属性为 `YES`，才可以使用 `XyView` 功能。
 
-### Usage
+### 使用方法
 
-Add flutter_xy_plugin as a dependency in your pubspec.yaml file.
+在 pubspec.yaml 文件中添加 flutter_xy_plugin 依赖即可。
 
-### Using Banner and Native ads
+### 使用横幅和原生广告
 
-Banner ad example:
+横幅广告实例 1：
 
 ```dart
 XyView(id : "209A03F87BA3B4EB82BEC9E5F8B41383");
 ```
 
-Another banner ad example:
+横幅广告实例 2：
 
 ```dart
 XyView(
@@ -39,7 +36,7 @@ XyView(
 )
 ```
 
-Native ad example:
+原生广告实例 1：
 
 ```dart
 XyView(
@@ -49,7 +46,7 @@ XyView(
 )
 ```
 
-Another native ad example:
+原生广告实例 2：
 
 ```dart
 XyView(
@@ -67,11 +64,11 @@ XyView(
 )
 ```
 
-Note: if you used `XyView` as a child of `SingleChildScrollView`, you need wrap `XyView` in a `Container` with specified height.
+注意：如果将 `XyView` 作为 `SingleChildScrollView` 子节点来使用，你需要将 `XyView` 包裹在 `Container` 中，并指定高度。
 
-### Using Splash, Interstitial and Rewarded video ads
+### 使用开屏，插屏和激励视频广告
 
-Splash ad example:
+开屏广告实例：
 
 ```dart
 XyController(
@@ -86,9 +83,9 @@ XyController(
 );
 ```
 
-Note: You need to add the above code into the `initState` method of your AppState.
+注意：开屏广告需要将上面的代码添加到您应用的 AppState 中的 `initState` 方法中。
 
-Interstitial ad example:
+插屏广告实例：
 
 ```dart
 XyController(
@@ -103,7 +100,7 @@ XyController(
 );
 ```
 
-Rewarded video ad example:
+激励视频广告实例：
 
 ```dart
 XyController(
@@ -118,11 +115,11 @@ XyController(
 );
 ```
 
-Note: `XyController` is not a widget. You can not include an `XyController` in the widget tree.
+注意：`XyController` 不是一个 widget。你不能将 `XyController` 包含在 widget 树中。
 
-### Events
+### 事件
 
-Both `XyView` and `XyController` support the following events:
+`XyView` 和 `XyController` 支持以下事件：
 
 * `onCreated`
 * `onCustom`
@@ -146,4 +143,4 @@ Both `XyView` and `XyController` support the following events:
 * `onVideoError`
 * `onVideoBreak`
 
-In addition, `XyView` supports `onViewClose` event.
+另外，`XyView` 还支持 `onViewClose` 事件。
