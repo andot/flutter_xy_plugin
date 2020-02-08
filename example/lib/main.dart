@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_xy_plugin/flutter_xy_plugin.dart';
+import 'package:flutter_msa_sdk/flutter_msa_sdk.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,8 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-//  String _value = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -21,6 +20,9 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    if (await FlutterMsaSdk.isSupport()) {
+      FlutterXyPlugin.oaid = await FlutterMsaSdk.getOAID();
+    }
     XyController(
       "5C3DD65A809B08A2D6CF3DEFBC7E09C7",
       type: Type.Splash,
@@ -31,22 +33,6 @@ class _MyAppState extends State<MyApp> {
         controller.show();
       },
     );
-//    String value;
-//    // Platform messages may fail, so we use a try/catch PlatformException.
-//    try {
-//      value = (await FlutterXyPlugin.landingPageDisplayActionBarEnabled).toString();
-//    } on PlatformException {
-//      value = 'ooxx.';
-//    }
-//
-//    // If the widget was removed from the tree while the asynchronous platform
-//    // message was in flight, we want to discard the reply rather than calling
-//    // setState to update our non-existent appearance.
-//    if (!mounted) return;
-//
-//    setState(() {
-//      _value = value;
-//    });
   }
 
   @override

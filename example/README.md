@@ -1,16 +1,127 @@
-# flutter_xy_plugin_example
+# flutter_xy_plugin example
 
-Demonstrates how to use the flutter_xy_plugin plugin.
+```dart
+import 'dart:async';
 
-## Getting Started
+import 'package:flutter/material.dart';
+import 'package:flutter_xy_plugin/flutter_xy_plugin.dart';
+import 'package:flutter_msa_sdk/flutter_msa_sdk.dart';
 
-This project is a starting point for a Flutter application.
+void main() => runApp(MyApp());
 
-A few resources to get you started if this is your first Flutter project:
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    if (await FlutterMsaSdk.isSupport()) {
+      FlutterXyPlugin.oaid = await FlutterMsaSdk.getOAID();
+    }
+    XyController(
+      "5C3DD65A809B08A2D6CF3DEFBC7E09C7",
+      type: Type.Splash,
+      onCreated: (controller) {
+        controller.load();
+      },
+      onLoaded: (controller) {
+        controller.show();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('新义互联广告 SDK Flutter 插件演示'),
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                    height: 80,
+                    child: XyView(
+//                      id : "209A03F87BA3B4EB82BEC9E5F8B41383",
+                      onCreated: (view) {
+                        view.load("209A03F87BA3B4EB82BEC9E5F8B41383");
+                      },
+                      onLoaded: (view) {
+                        view.show();
+                      },
+                      onImpressionFinished: (view) {
+                        print(
+                            "onImpressionFinished: 209A03F87BA3B4EB82BEC9E5F8B41383");
+                      },
+                    )),
+                Container(
+                    height: 300,
+                    child: XyView(
+                      id: "98738D91D3BB241458D3FAE5A5BF7B34",
+                      size: Size.NATIVE,
+                      carousel: false,
+//                      onCreated: (view) {
+//                        view.load("98738D91D3BB241458D3FAE5A5BF7B34");
+//                      },
+//                      onLoaded: (view) {
+//                        view.show();
+//                      },
+                      onImpressionFinished: (view) {
+                        print(
+                            "onImpressionFinished: 98738D91D3BB241458D3FAE5A5BF7B34");
+                      },
+                    )),
+                RaisedButton(
+                    child: const Text('Show Interstitial Ad'),
+                    onPressed: () {
+                      XyController(
+                        "2EF810225D10260506CBB704C96C5325",
+                        type: Type.Interstitial,
+                        onCreated: (controller) {
+                          controller.load();
+                        },
+                        onLoaded: (controller) {
+                          controller.show();
+                        },
+                      );
+                    }),
+                RaisedButton(
+                    child: const Text('Show RewardedVideo Ad'),
+                    onPressed: () {
+                      XyController(
+                        "527E187C5DEA600C35309759469ADAA8",
+                        type: Type.RewardedVideo,
+                        onCreated: (controller) {
+                          controller.load();
+                        },
+                        onLoaded: (controller) {
+                          controller.show();
+                        },
+                      );
+                    }),
+              ].map((Widget button) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: button,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
