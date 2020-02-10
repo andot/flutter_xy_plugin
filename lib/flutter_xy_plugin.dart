@@ -408,19 +408,6 @@ class XyController {
   }
 }
 
-enum Position {
-  Absolute,
-  TopLeft,
-  TopCenter,
-  TopRight,
-  MiddleLeft,
-  MiddleCenter,
-  MiddleRight,
-  BottomLeft,
-  BottomCenter,
-  BottomRight
-}
-
 class FlutterXyPlugin {
   static MethodChannel _channel = _initChannel();
   static String _oaid;
