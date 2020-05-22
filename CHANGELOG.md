@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Remove getter landingPageDisplayActionBarEnabled.
+* Remove getter landingPageAnimationEnabled.
+* Remove getter landingPageFullScreenEnabled.
+
 ## 0.3.0
 
 * Update XY iOS SDK to 1.4.3.

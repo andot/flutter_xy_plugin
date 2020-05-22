@@ -560,26 +560,14 @@ class FlutterXyPlugin {
     _channel.invokeMethod('setOAID', <String, dynamic>{"oaid": value});
   }
 
-  static Future<bool> get landingPageDisplayActionBarEnabled async {
-    return await _channel.invokeMethod('isLandingPageDisplayActionBarEnabled');
-  }
-
   static set landingPageDisplayActionBarEnabled(bool enabled) {
     _channel.invokeMethod('setLandingPageDisplayActionBarEnabled',
         <String, dynamic>{"enabled": enabled});
   }
 
-  static Future<bool> get landingPageAnimationEnabled async {
-    return await _channel.invokeMethod('isLandingPageAnimationEnabled');
-  }
-
   static set landingPageAnimationEnabled(bool enabled) {
     _channel.invokeMethod('setLandingPageAnimationEnabled',
         <String, dynamic>{"enabled": enabled});
-  }
-
-  static Future<bool> get landingPageFullScreenEnabled async {
-    return await _channel.invokeMethod('isLandingPageFullScreenEnabled');
   }
 
   static set landingPageFullScreenEnabled(bool enabled) {
