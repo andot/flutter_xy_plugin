@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Upgrade to AndroidX.
+
 ## 1.0.0
 
 * Remove getter landingPageDisplayActionBarEnabled.
