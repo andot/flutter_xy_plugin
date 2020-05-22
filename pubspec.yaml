@@ -2,12 +2,12 @@ name: flutter_xy_plugin
 description: Flutter plugin for Adtalos SDK, supporting
   banner, native, interstitial (full-screen/half-screen),
   splash and rewarded video ads.
-version: 0.3.0
+version: 1.0.0
 homepage: https://github.com/adtalos/flutter_xy_plugin
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
-
+  flutter: ">=1.12.0 <2.0.0"
 dependencies:
   flutter:
     sdk: flutter
