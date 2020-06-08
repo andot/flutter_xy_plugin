@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_xy_plugin'
-  s.version          = '0.3.0'
+  s.version          = '1.2.0'
   s.summary          = '新义互联广告 SDK Flutter 插件.'
   s.description      = <<-DESC
 新义互联广告 SDK Flutter 插件.
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'AdtalosSDK', '~> 1.4.3'
+  s.dependency 'AdtalosSDK', '~> 1.4.4'
   s.platform = :ios, '8.0'
 
   s.static_framework = true
