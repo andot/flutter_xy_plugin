@@ -1,3 +1,11 @@
+## 1.2.0
+
+* Add deeplink trackers support.
+
+## 1.1.0
+
+* Upgrade to AndroidX.
+
 ## 1.0.0
 
 * Remove getter landingPageDisplayActionBarEnabled.

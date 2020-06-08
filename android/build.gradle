@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -36,6 +36,6 @@ android {
 
 
 dependencies {
-    implementation 'io.flutter.plugin.xy:adtalos-sdk:2.2.2'
+    implementation 'io.flutter.plugin.xy:adtalos-sdk:2.4.0'
 }
 

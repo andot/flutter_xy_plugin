@@ -1,7 +1,7 @@
 package com.adtalos.flutter_xy_plugin;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import java.util.HashMap;
