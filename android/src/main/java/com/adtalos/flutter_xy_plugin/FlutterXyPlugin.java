@@ -59,7 +59,6 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCall
         channel.setMethodCallHandler(this);
         registry.registerViewFactory("flutter_xy_plugin/XyView", new XyViewFactory(messenger));
         SDK.init(applicationContext);
-        SDK.requestPermissions(activity);
     }
 
     @Override
@@ -103,6 +102,10 @@ public class FlutterXyPlugin implements FlutterPlugin, ActivityAware, MethodCall
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         switch (call.method) {
+            case "requestPermissions":
+                SDK.requestPermissions(activity);
+                result.success(null);
+                break;
             case "setOAID":
                 SDK.setOAID(call.<String>argument("oaid"));
                 result.success(null);
