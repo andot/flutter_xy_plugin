@@ -574,4 +574,10 @@ class FlutterXyPlugin {
     _channel.invokeMethod('setLandingPageFullScreenEnabled',
         <String, dynamic>{"enabled": enabled});
   }
+
+  static requestPermissions() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _channel.invokeMethod('requestPermissions');
+    }
+  }
 }
