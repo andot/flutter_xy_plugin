@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Add requestPermissions method for Android.
+
 ## 1.2.0
 
 * Add deeplink trackers support.
