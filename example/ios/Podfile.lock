@@ -1,10 +1,10 @@
 PODS:
-  - AdtalosSDK (1.4.4)
+  - AdtalosSDK (1.5.0)
   - Flutter (1.0.0)
   - flutter_msa_sdk (0.0.1):
     - Flutter
-  - flutter_xy_plugin (1.2.0):
-    - AdtalosSDK (~> 1.4.4)
+  - flutter_xy_plugin (1.4.0):
+    - AdtalosSDK (~> 1.5.0)
     - Flutter
 
 DEPENDENCIES:
@@ -25,10 +25,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_xy_plugin/ios"
 
 SPEC CHECKSUMS:
-  AdtalosSDK: 6de2fbe67ed5456af7cd0bb4a895fb665f125e2c
+  AdtalosSDK: a66d3ab335d1366a21b0650998aab4170d0e8ef7
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_msa_sdk: 3ba32b34d125bd4e105e7800fe941c3181db6d71
-  flutter_xy_plugin: b6a146d59697f64e2ef77919bb4481bf7d9306d4
+  flutter_xy_plugin: 82137495458301f55443c7b3b54d452fa4c04823
 
 PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
