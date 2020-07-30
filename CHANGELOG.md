@@ -1,3 +1,8 @@
+## 1.4.0
+
+* Update XY iOS SDK to 1.5.0.
+* Update XY Android SDK to 2.5.0.
+
 ## 1.3.0
 
 * Add requestPermissions method for Android.
