@@ -1,3 +1,6 @@
+## 1.4.1
+* Update XY Android SDK to 2.5.1.
+
 ## 1.4.0
 
 * Update XY iOS SDK to 1.5.0.

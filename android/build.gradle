@@ -36,6 +36,6 @@ android {
 
 
 dependencies {
-    implementation 'io.flutter.plugin.xy:adtalos-sdk:2.5.0'
+    implementation 'io.flutter.plugin.xy:adtalos-sdk:2.5.1'
 }
 
