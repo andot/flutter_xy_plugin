@@ -1,3 +1,7 @@
+## 1.4.2
+* Update XY iOS SDK to 1.5.1.
+* Update Flutter MSA SDK to 1.0.23.
+
 ## 1.4.1
 * Update XY Android SDK to 2.5.1.
 
