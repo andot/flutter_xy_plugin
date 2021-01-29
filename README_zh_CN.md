@@ -144,3 +144,7 @@ XyController(
 * `onVideoBreak`
 
 另外，`XyView` 还支持 `onViewClose` 事件。
+
+### 代码混淆注意事项
+
+有同学反应代码混淆之后，app 在 Android 上运行会有问题。这个问题很可能是 oaid sdk 引起的，在 oaid sdk 的官方文档中有详细的配置说明，可以参考该说明进行配置。
